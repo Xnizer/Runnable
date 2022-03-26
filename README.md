@@ -7,7 +7,7 @@ Test your new idea quickly, and avoid commenting out your previews tests, go wit
 With Runnable you can just add the [Runnable] attribute to functions anywhere in your code, and with a single line of code, Runnable will let you run any of those functions from the console.
 
 ## Example
-'''csharp
+```csharp
 static void main()
 {
 	Runnable.Runner.Run();
@@ -26,4 +26,4 @@ public void Test()
 {
 	// test code here
 }
-'''
+```
