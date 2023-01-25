@@ -1,5 +1,4 @@
-﻿
-namespace Runnable.Example
+﻿namespace Runnable.Example
 {
     static class Program
     {
