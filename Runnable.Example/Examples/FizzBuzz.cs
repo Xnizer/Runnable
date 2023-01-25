@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Text;
 using Runnable.Attributes;
 
 namespace Runnable.Example
@@ -6,23 +6,27 @@ namespace Runnable.Example
     internal class FizzBuzz
     {
         [Runnable("Print FizzBuzz", MethodParameters = new object[] { 100 })]
-        public static void Run(int n)
+        public static string FizzBuzzString(int n)
         {
+            StringBuilder builder = new StringBuilder();
+
             for (int i = 1; i <= n; i++)
             {
-                string output = "";
+                if (i % 3 != 0 && i % 3 != 0)
+                    builder.Append(i);
+                else
+                {
+                    if (i % 3 == 0)
+                        builder.Append("Fizz");
 
-                if (i % 3 == 0)
-                    output += "Fizz";
+                    if (i % 5 == 0)
+                        builder.Append("Buzz");
+                }
 
-                if (i % 5 == 0)
-                    output += "Buzz";
-
-                if (string.IsNullOrEmpty(output))
-                    output = i.ToString();
-
-                Console.WriteLine(output);
+                builder.AppendLine();
             }
+
+            return builder.ToString();
         }
     }
 }

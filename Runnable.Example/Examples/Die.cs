@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Runnable.Attributes;
 
 namespace Runnable.Example
@@ -18,10 +19,14 @@ namespace Runnable.Example
         }
 
         [Runnable("Roll 10 dice", ConstructorParameters = new object[] { 1337 })]
-        public void TestRoll()
+        public string TestRoll()
         {
+            StringBuilder builder = new StringBuilder();
+
             for (int i = 0; i < 10; i++)
-                Console.WriteLine(Roll());
+                builder.AppendLine(Roll().ToString());
+
+            return builder.ToString();
         }
     }
 }
