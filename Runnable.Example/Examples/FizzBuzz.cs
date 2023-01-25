@@ -12,7 +12,7 @@ namespace Runnable.Example
 
             for (int i = 1; i <= n; i++)
             {
-                if (i % 3 != 0 && i % 3 != 0)
+                if (i % 3 != 0 && i % 5 != 0)
                     builder.Append(i);
                 else
                 {
