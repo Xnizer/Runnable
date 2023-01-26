@@ -31,7 +31,7 @@ namespace Runnable
             }
 
             for (int i = 0; i < runnables.Length; i++)
-                terminal.PrintMessage($"{i + 1} - {runnables[i].Attribute.DisplayName}", MessageType.Text);
+                terminal.PrintMessage($"{i + 1} - {runnables[i].RunnableAttribute.DisplayName}", MessageType.Text);
 
             if (terminal.ReadInt(1, runnables.Length, out int pos))
             {
@@ -40,9 +40,9 @@ namespace Runnable
                 object result = RunMethod(runnables[pos - 1], terminal);
 
                 if (result != null)
-                    terminal.PrintMessage($"\"{runnables[pos - 1].Attribute.DisplayName}\" returned:\n{result}", MessageType.Text);
+                    terminal.PrintMessage($"\"{runnables[pos - 1].RunnableAttribute.DisplayName}\" returned:\n{result}", MessageType.Text);
                 else
-                    terminal.PrintMessage($"\"{runnables[pos - 1].Attribute.DisplayName}\" returned no value.", MessageType.Text);
+                    terminal.PrintMessage($"\"{runnables[pos - 1].RunnableAttribute.DisplayName}\" returned no value.", MessageType.Text);
             }
         }
 
@@ -50,9 +50,12 @@ namespace Runnable
         {
             var runnables = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                             from type in assembly.DefinedTypes
-                            from method in type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public  | BindingFlags.Static | BindingFlags.Instance)
-                            from attribute in method.GetCustomAttributes<RunnableAttribute>()
-                            select new RunnableMethod(attribute, method);
+                            from method in type.GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance)
+                            from runnableAttribute in method.GetCustomAttributes<RunnableAttribute>()
+                            select new RunnableMethod(
+                                method, runnableAttribute,
+                                method.GetCustomAttribute<ConstructorParametersAttribute>(),
+                                method.GetCustomAttribute<MethodParametersAttribute>());
 
             return runnables.ToArray();
         }
@@ -60,8 +63,8 @@ namespace Runnable
         private static object RunMethod(RunnableMethod runnable, ITerminal terminal)
         {
             var method = runnable.Method;
-            var constructorParametersAttribute = method.GetCustomAttribute<ConstructorParametersAttribute>();
-            var methodParametersAttribute = method.GetCustomAttribute<MethodParametersAttribute>();
+            var constructorParametersAttribute = runnable.ConstructorParametersAttribute;
+            var methodParametersAttribute = runnable.MethodParametersAttribute;
 
             var type = method.DeclaringType;
 
@@ -69,7 +72,7 @@ namespace Runnable
 
             if (!method.IsStatic && !(type is null))
             {
-                var constructorParameters = constructorParametersAttribute?.Parameters ?? Array.Empty<object>();                    
+                var constructorParameters = constructorParametersAttribute?.Parameters ?? Array.Empty<object>();
 
                 bool validConstructorParameters = type.GetConstructors()
                     .Any(constructor => ValidParameters(constructor.GetParameters(), constructorParameters));

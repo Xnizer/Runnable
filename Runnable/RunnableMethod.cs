@@ -5,13 +5,21 @@ namespace Runnable
 {
     internal class RunnableMethod
     {
-        public RunnableAttribute Attribute { get; }
         public MethodInfo Method { get; }
+        public RunnableAttribute RunnableAttribute { get; }
+        public ConstructorParametersAttribute ConstructorParametersAttribute { get; }
+        public MethodParametersAttribute MethodParametersAttribute { get; }
 
-        public RunnableMethod(RunnableAttribute attribute, MethodInfo method)
+        public RunnableMethod(
+            MethodInfo method,
+            RunnableAttribute runnableAttribute,
+            ConstructorParametersAttribute constructorParametersAttribute,
+            MethodParametersAttribute methodParametersAttribute)
         {
-            Attribute = attribute;
             Method = method;
+            RunnableAttribute = runnableAttribute;
+            ConstructorParametersAttribute = constructorParametersAttribute;
+            MethodParametersAttribute = methodParametersAttribute;
         }
     }
 }
