@@ -18,7 +18,8 @@ namespace Runnable.Example
             return _random.Next(1, 7);
         }
 
-        [Runnable("Roll 10 dice", ConstructorParameters = new object[] { 1337 })]
+        [Runnable("Roll 10 dice")]
+        [ConstructorParameters(1337)]
         public string TestRoll()
         {
             StringBuilder builder = new StringBuilder();

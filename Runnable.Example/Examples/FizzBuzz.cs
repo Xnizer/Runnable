@@ -5,7 +5,8 @@ namespace Runnable.Example
 {
     internal class FizzBuzz
     {
-        [Runnable("Print FizzBuzz", MethodParameters = new object[] { 100 })]
+        [Runnable("Print FizzBuzz")]
+        [MethodParameters(100)]
         public static string FizzBuzzString(int n)
         {
             StringBuilder builder = new StringBuilder();
