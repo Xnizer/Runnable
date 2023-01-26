@@ -60,7 +60,8 @@ namespace Runnable
         private static object RunMethod(RunnableMethod runnable, ITerminal terminal)
         {
             var method = runnable.Method;
-            var attribute = runnable.Attribute;
+            var constructorParametersAttribute = method.GetCustomAttribute<ConstructorParametersAttribute>();
+            var methodParametersAttribute = method.GetCustomAttribute<MethodParametersAttribute>();
 
             var type = method.DeclaringType;
 
@@ -68,7 +69,7 @@ namespace Runnable
 
             if (!method.IsStatic && !(type is null))
             {
-                var constructorParameters = attribute.ConstructorParameters;
+                var constructorParameters = constructorParametersAttribute?.Parameters ?? Array.Empty<object>();                    
 
                 bool validConstructorParameters = type.GetConstructors()
                     .Any(constructor => ValidParameters(constructor.GetParameters(), constructorParameters));
@@ -79,10 +80,10 @@ namespace Runnable
                     return null;
                 }
 
-                instance = Activator.CreateInstance(type, attribute.ConstructorParameters);
+                instance = Activator.CreateInstance(type, constructorParameters);
             }
 
-            var methodParameters = attribute.MethodParameters;
+            var methodParameters = methodParametersAttribute?.Parameters ?? Array.Empty<object>();
 
             if (!ValidParameters(method.GetParameters(), methodParameters))
             {
@@ -90,7 +91,7 @@ namespace Runnable
                 return null;
             }
 
-            return method.Invoke(instance, attribute.MethodParameters);
+            return method.Invoke(instance, methodParameters);
         }
 
         private static bool ValidParameters(ParameterInfo[] requiredParameters, object[] parameters)
